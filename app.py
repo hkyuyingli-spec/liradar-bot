@@ -16,33 +16,86 @@ st.set_page_config(
 # --- Theme Styling ---
 st.markdown("""
     <style>
+    /* Global Background and Text */
+    .stApp {
+        background-color: #1a1a2e;
+        color: #ffffff;
+    }
+    
+    /* Main Content Area */
     .main {
-        background-color: #0e1117;
+        background-color: #1a1a2e;
     }
-    .stMetric {
-        background-color: #161b22;
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #30363d;
+
+    /* Metric Cards Styling */
+    [data-testid="stMetric"] {
+        background-color: #0f3460;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #16213e;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
+    
+    /* Metric Label (Titles) */
+    [data-testid="stMetricLabel"] {
+        color: #e0e0e0 !important;
+        font-weight: 500;
+    }
+    
+    /* Metric Value (Numbers) */
+    [data-testid="stMetricValue"] {
+        color: #f1c40f !important; /* High-contrast Yellow */
+        font-weight: 800 !important;
+        font-size: 1.8rem !important;
+    }
+
+    /* Buttons */
     .stButton>button {
         width: 100%;
-        border-radius: 5px;
-        height: 3em;
-        background-color: #238636;
+        border-radius: 8px;
+        height: 3.5em;
+        background-color: #e94560; /* Vibrant accent color */
         color: white;
         border: none;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: 0.3s;
     }
     .stButton>button:hover {
-        background-color: #2ea043;
+        background-color: #ff4d6d;
+        transform: translateY(-2px);
     }
+
+    /* Chat Messages Visibility */
+    [data-testid="stChatMessage"] {
+        background-color: #16213e;
+        border: 1px solid #0f3460;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #16213e;
+    }
+    
     /* Custom style for the chat container */
     .chat-container {
-        border: 1px solid #30363d;
+        border: 1px solid #16213e;
         border-radius: 10px;
-        padding: 20px;
-        background-color: #0d1117;
+        padding: 15px;
+        background-color: #1a1a2e;
         margin-bottom: 20px;
+    }
+
+    /* Mobile optimization for font sizes */
+    @media (max-width: 640px) {
+        .stMetric {
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 1.5rem !important;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
@@ -105,16 +158,13 @@ with tab1:
                 st.markdown(message["content"])
 
     # Chat bar at the BOTTOM
-    # Streamlit's chat_input is automatically sticky to the bottom of the screen or container
     if prompt := st.chat_input("Ex: 'Price of Bitcoin' or 'Top DeFi protocols'"):
-        # We append to history first so it renders in the loop above on next run
         st.session_state.messages.append({"role": "user", "content": prompt})
         
         # Get response from our logic
         response = bot_logic.get_liradar_response(prompt)
         st.session_state.messages.append({"role": "assistant", "content": response})
         
-        # Trigger a rerun to show the new messages immediately
         st.rerun()
 
 with tab2:
