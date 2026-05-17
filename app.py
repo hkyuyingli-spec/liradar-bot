@@ -13,7 +13,29 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- Theme Styling ---
+# --- PWA Injection ---
+pwa_html = """
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1998/1998664.png">
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+"""
+st.markdown(pwa_html, unsafe_allow_html=True)
+
+# --- Theme Styling (Professional Dark Trading Dashboard) ---
 st.markdown("""
     <style>
     /* Global Background and Text */
